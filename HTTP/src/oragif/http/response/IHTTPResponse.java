@@ -1,4 +1,11 @@
 package oragif.http.response;
+/*
+*  Docs https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+*  Attribution: Mozilla Corporation & httpwg.org - RFC 9110*
+*  License: https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Attrib_copyright_license
+*  * https://httpwg.org/specs/rfc9110.html#overview.of.status.codes
+*/
+
 public interface IHTTPResponse {
     /*-------------- Info Response --------------*/
     /**
