@@ -2,8 +2,6 @@ package oragif.api;
 
 import oragif.http.HTTPHandler;
 
-import java.io.Console;
-
 public class Main {
 
     private static HTTPHandler handler;
