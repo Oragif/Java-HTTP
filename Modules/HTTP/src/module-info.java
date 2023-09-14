@@ -5,4 +5,5 @@ module oragif.http {
     exports oragif.http;
     exports oragif.http.routing;
     exports oragif.http.response;
+    exports oragif.http.middleware;
 }

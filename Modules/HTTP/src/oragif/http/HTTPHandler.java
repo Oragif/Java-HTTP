@@ -1,6 +1,7 @@
 package oragif.http;
 
 import com.sun.net.httpserver.*;
+import oragif.http.middleware.MiddlewareHandler;
 import oragif.http.routing.Route;
 import oragif.logger.Logger;
 
@@ -8,8 +9,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class HTTPHandler {
-    private Logger logger = new Logger("HTTP-Server:unknown");
+    private final Logger logger = new Logger("HTTP-Server:unknown");
     private boolean isRunning;
+    private MiddlewareHandler middlewareHandler;
     private InetSocketAddress socketAddress;
     private final HttpServer httpServer;
     {
