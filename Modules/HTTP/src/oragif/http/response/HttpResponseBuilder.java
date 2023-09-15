@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 public class HttpResponseBuilder implements IHTTPResponse{
     private final HttpExchange httpExchange;
@@ -50,7 +51,7 @@ public class HttpResponseBuilder implements IHTTPResponse{
         int contentLength = -1;
         byte[] byteContent = null;
         if (body != null) {
-            byteContent = body.toString().getBytes();
+            byteContent = body.toString().getBytes(StandardCharsets.UTF_8);
             contentLength = byteContent.length;
         }
 

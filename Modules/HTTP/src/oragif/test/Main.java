@@ -2,13 +2,17 @@ package oragif.test;
 
 import oragif.http.HTTPHandler;
 
-public class Main {
+import java.io.IOException;
 
-    private static HTTPHandler handler;
-    public static void main(String[] args) throws InterruptedException {
+public class Main {
+    public static void main(String[] args) throws IOException, InterruptedException {
+        HTTPHandlerTest();
+    }
+
+    private static void HTTPHandlerTest() throws InterruptedException {
         System.setProperty("javax.net.debug","all");
-        handler = new HTTPHandler(8080);
-        handler.addRoute("/test", new test());
+        HTTPHandler handler = new HTTPHandler(8080);
+        handler.addRoute("/test", new test("test"));
         handler.start();
         Thread.sleep(1000000000);
     }

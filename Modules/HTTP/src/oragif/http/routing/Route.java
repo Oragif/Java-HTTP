@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public abstract class Route implements HttpHandler {
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) {
         HttpResponseBuilder responseBuilder = new HttpResponseBuilder(exchange);
         String method = exchange.getRequestMethod();
         switch (method) {
