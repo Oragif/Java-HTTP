@@ -81,7 +81,7 @@ public class RouteHandler {
             if (middleware.isConsuming()) { triggerMiddleware = false; }
             if (middleware.isDenying()) {
                 if (middleware.getRedirectionPath() == null) return null;
-                return getRoute(uriPaths);
+                return getRoute(middleware.getRedirectionPath());
             }
         }
         return currentPath.route;
