@@ -39,6 +39,7 @@ public class HTTPHandler {
     public HTTPHandler(int port, int handlerThreads) {
         this();
         this.listen(port);
+        this.setHandlerThreads(handlerThreads);
     }
 
     public boolean isRunning() { return this.isRunning; }
