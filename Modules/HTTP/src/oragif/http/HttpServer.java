@@ -1,6 +1,6 @@
 package oragif.http;
 
-import com.sun.net.httpserver.*;
+import oragif.http.middleware.Middleware;
 import oragif.http.routing.RouteHandler;
 import oragif.http.routing.Route;
 import oragif.logger.Logger;
@@ -9,34 +9,35 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
-public class HTTPHandler {
+public class HttpServer {
     private final Logger logger = new Logger("HTTP-Server:unknown");
     private boolean isRunning;
     private RouteHandler routeHandler;
     private InetSocketAddress socketAddress;
-    private final HttpServer httpServer;
+    private final com.sun.net.httpserver.HttpServer httpServer;
     private int handlerThreads;
+    private String publicFolder;
 
     {
         try {
-            this.httpServer = HttpServer.create();
+            this.httpServer = com.sun.net.httpserver.HttpServer.create();
         } catch (IOException e) {
             logger.error("HTTP server failed to create, bye!");
             throw new RuntimeException(e);
         }
     }
 
-    public HTTPHandler() {
+    public HttpServer() {
         this.isRunning = false;
         this.routeHandler = new RouteHandler();
     }
 
-    public HTTPHandler(int port) {
+    public HttpServer(int port) {
         this();
         this.listen(port);
     }
 
-    public HTTPHandler(int port, int handlerThreads) {
+    public HttpServer(int port, int handlerThreads) {
         this();
         this.listen(port);
     }
@@ -48,6 +49,10 @@ public class HTTPHandler {
         this.handlerThreads = handlerThreads;
 
         return true;
+    }
+
+    public void setPublicFolder(String path) {
+        this.publicFolder = path;
     }
 
     public boolean listen(int port) {
@@ -94,6 +99,7 @@ public class HTTPHandler {
     }
 
     public void addRoute(String path, Route route) { this.routeHandler.addRoute(path, route); }
+    public void addMiddleware(String path, Middleware middleware) { this.routeHandler.addListener(path, middleware); }
 
     /**
      * @// TODO: 15/09/2023  Fix this function

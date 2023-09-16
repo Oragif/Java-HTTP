@@ -14,14 +14,15 @@ public class HttpResponseBuilder implements IHTTPResponse{
 
     public HttpResponseBuilder (HttpExchange exchange) {
         this.httpExchange = exchange;
+        this.headers = this.httpExchange.getResponseHeaders();
     }
 
     public HttpExchange getHttpExchange() {
-        return httpExchange;
+        return this.httpExchange;
     }
 
     public Headers getHeaders() {
-        return headers;
+        return this.headers;
     }
 
     public HttpResponseBuilder appendHeader(String headerName, List<String> values) {
@@ -157,8 +158,9 @@ public class HttpResponseBuilder implements IHTTPResponse{
     }
 
     @Override
-    public HttpResponseBuilder HTTP301() {
+    public HttpResponseBuilder HTTP301(String newLocation) {
         this.httpStatusCode = 301;
+        this.headers.add("Location", newLocation);
         return this;
     }
 

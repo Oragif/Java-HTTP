@@ -11,11 +11,18 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class RequestHandler implements HttpHandler {
-    private RouteHandler routeHandler;
-    private Logger logger = new Logger("RequestHandler");
+    private final RouteHandler routeHandler;
+    private final Logger logger;
+    private String publicFolder;
 
     public RequestHandler(RouteHandler routeHandler) {
         this.routeHandler = routeHandler;
+        this.logger = new Logger("RequestHandler");
+    }
+
+    public RequestHandler(RouteHandler routeHandler, String publicFolder) {
+        this(routeHandler);
+        this.publicFolder = publicFolder;
     }
 
     @Override

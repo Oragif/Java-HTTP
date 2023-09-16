@@ -103,8 +103,9 @@ public interface IHTTPResponse {
     /**
      * Moved Permanently -- The URL of the requested resource has been changed permanently. The new URL SHOULD be given in the response.
      * @implNote Moved Permanently
+     * @param newLocation String - path of the relocated resource
      */
-    public HttpResponseBuilder HTTP301();
+    public HttpResponseBuilder HTTP301(String newLocation);
 
     /**
      * Found -- This response code means that the URI of requested resource has been changed temporarily.
