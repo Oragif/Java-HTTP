@@ -40,6 +40,7 @@ public class HttpServer {
     public HttpServer(int port, int handlerThreads) {
         this();
         this.listen(port);
+        this.setHandlerThreads(handlerThreads);
     }
 
     public boolean isRunning() { return this.isRunning; }
