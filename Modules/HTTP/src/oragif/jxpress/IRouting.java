@@ -1,10 +1,14 @@
 package oragif.jxpress;
 
-import oragif.jxpress.worker.IWorker;
+import oragif.jxpress.http.RequestHandler;
+import oragif.jxpress.worker.Router;
+import oragif.jxpress.worker.Worker;
 
 public interface IRouting {
-    public void get(String path, IWorker method);
-    public void post(String path, IWorker method);
-    public void put(String path, IWorker method);
-    public void delete(String path, IWorker method);
+    public void get(String path, RequestHandler method);
+    public void post(String path, RequestHandler method);
+    public void put(String path, RequestHandler method);
+    public void delete(String path, RequestHandler method);
+    public void use(String path, Router method);
+    public void use(Worker worker);
 }
