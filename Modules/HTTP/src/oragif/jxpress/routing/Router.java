@@ -1,9 +1,11 @@
-package oragif.jxpress.worker;
+package oragif.jxpress.routing;
 
 import oragif.jxpress.http.RequestHandler;
-import oragif.jxpress.IRouting;
 import oragif.jxpress.http.Request;
 import oragif.jxpress.http.Response;
+import oragif.jxpress.worker.IWorker;
+import oragif.jxpress.worker.RestWorker;
+import oragif.jxpress.worker.Worker;
 
 import java.util.ArrayList;
 import java.util.HashMap;

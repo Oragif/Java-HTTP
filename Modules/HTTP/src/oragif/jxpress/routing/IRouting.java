@@ -1,7 +1,7 @@
-package oragif.jxpress;
+package oragif.jxpress.routing;
 
 import oragif.jxpress.http.RequestHandler;
-import oragif.jxpress.worker.Router;
+import oragif.jxpress.routing.Router;
 import oragif.jxpress.worker.Worker;
 
 public interface IRouting {

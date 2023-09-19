@@ -1,7 +1,7 @@
 package oragif.test;
 
 import oragif.jxpress.JXpress;
-import oragif.jxpress.worker.Router;
+import oragif.jxpress.routing.Router;
 
 import java.io.IOException;
 
@@ -13,18 +13,18 @@ public class Main {
             System.out.print(request.getBody());
         }));
         jXpress.get("/", ((request, response) -> {
-            response.send("test");
+            response.send("/");
         }));
         jXpress.get("/test", ((request, response) -> {
-            response.send("test-1");
+            response.send("/test");
         }));
         jXpress.get("/test/test", ((request, response) -> {
-            response.send("test-2");
+            response.send("/test/test");
         }));
         Router router = new Router();
-        router.get("/test", ((request, response) -> {
-            response.send("test-2");
+        router.get("/test2", ((request, response) -> {
+            response.send("/test/test2");
         }));
-        jXpress.use("/test2", router);
+        jXpress.use("/test", router);
     }
 }

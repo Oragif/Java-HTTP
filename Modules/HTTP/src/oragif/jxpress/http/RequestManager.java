@@ -1,10 +1,10 @@
-package oragif.jxpress;
+package oragif.jxpress.http;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import oragif.jxpress.http.Request;
 import oragif.jxpress.http.Response;
-import oragif.jxpress.worker.Router;
+import oragif.jxpress.routing.Router;
 
 public class RequestManager extends Router implements HttpHandler {
     {

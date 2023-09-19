@@ -116,7 +116,7 @@ public class Response {
         return true;
     }
 
-    public void send(Object object) throws IOException {
+    public void send(Object object) {
         this.send(object.toString());
     }
 }
