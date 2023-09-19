@@ -1,7 +1,7 @@
 package oragif.jxpress;
 
 import com.sun.net.httpserver.HttpServer;
-import oragif.jxpress.http.RequestHandler;
+import oragif.jxpress.http.IRequestHandler;
 import oragif.jxpress.http.RequestManager;
 import oragif.jxpress.routing.IRouting;
 import oragif.jxpress.routing.Router;
@@ -44,22 +44,22 @@ public class JXpress implements IRouting {
     }
 
     @Override
-    public void get(String path, RequestHandler method) {
+    public void get(String path, IRequestHandler method) {
         this.requestManager.get(path, method);
     }
 
     @Override
-    public void post(String path, RequestHandler method) {
+    public void post(String path, IRequestHandler method) {
         this.requestManager.post(path, method);
     }
 
     @Override
-    public void put(String path, RequestHandler method) {
+    public void put(String path, IRequestHandler method) {
         this.requestManager.put(path, method);
     }
 
     @Override
-    public void delete(String path, RequestHandler method) {
+    public void delete(String path, IRequestHandler method) {
         this.requestManager.delete(path, method);
     }
 

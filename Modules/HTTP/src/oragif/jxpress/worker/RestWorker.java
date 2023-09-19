@@ -1,15 +1,15 @@
 package oragif.jxpress.worker;
 
-import oragif.jxpress.http.RequestHandler;
+import oragif.jxpress.http.IRequestHandler;
 import oragif.jxpress.http.Request;
 import oragif.jxpress.http.Response;
 
 public class RestWorker implements IWorker {
 
     private final String requestMethod;
-    private final RequestHandler worker;
+    private final IRequestHandler worker;
 
-    public RestWorker(String requestMethod, RequestHandler worker) {
+    public RestWorker(String requestMethod, IRequestHandler worker) {
         this.requestMethod = requestMethod;
         this.worker        = worker;
     }

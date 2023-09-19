@@ -1,6 +1,6 @@
 package oragif.jxpress.routing;
 
-import oragif.jxpress.http.RequestHandler;
+import oragif.jxpress.http.IRequestHandler;
 import oragif.jxpress.http.Request;
 import oragif.jxpress.http.Response;
 import oragif.jxpress.worker.IWorker;
@@ -71,22 +71,22 @@ public class Router implements IWorker, IRouting {
 
 
     @Override
-    public void get(String path, RequestHandler method) {
+    public void get(String path, IRequestHandler method) {
         this.addRestWorker(path, new RestWorker("GET", method));
     }
 
     @Override
-    public void post(String path, RequestHandler method) {
+    public void post(String path, IRequestHandler method) {
         this.addRestWorker(path, new RestWorker("POST", method));
     }
 
     @Override
-    public void put(String path, RequestHandler method) {
+    public void put(String path, IRequestHandler method) {
         this.addRestWorker(path, new RestWorker("PUT", method));
     }
 
     @Override
-    public void delete(String path, RequestHandler method) {
+    public void delete(String path, IRequestHandler method) {
         this.addRestWorker(path, new RestWorker("DELETE", method));
     }
 

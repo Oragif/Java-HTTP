@@ -1,8 +1,6 @@
 package oragif.jxpress.http;
 
-import java.io.IOException;
-
 @FunctionalInterface
-public interface RequestHandler {
+public interface IRequestHandler {
     void handle(Request request, Response response);
 }
