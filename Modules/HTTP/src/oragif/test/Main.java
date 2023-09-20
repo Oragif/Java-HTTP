@@ -10,7 +10,7 @@ public class Main {
         JXpress jXpress = new JXpress();
         jXpress.listen(8080);
         jXpress.post("/", ((request, response) -> {
-            System.out.print(request.getBody());
+            System.out.print(request.getJsonBody(test.class).test);
         }));
         jXpress.get("/", ((request, response) -> {
             response.send("/");

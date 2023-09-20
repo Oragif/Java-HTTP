@@ -23,7 +23,6 @@ public class Response {
     private String path;
     private String[] leveledPath;
     private int responseCode;
-    private String method;
 
     {
         this.responseCode = 200;
@@ -36,13 +35,8 @@ public class Response {
         this.headers      = exchange.getResponseHeaders();
         this.path         = exchange.getRequestURI().getPath();
         this.leveledPath  = splitPath(this.path);
-        this.method       = exchange.getRequestMethod();
         if (this.leveledPath.length == 0) this.leveledPath = new String[]{"/"};
         this.maxLevel     = this.leveledPath.length;
-    }
-
-    public String getMethod() {
-        return method;
     }
 
     private static String[] splitPath(String pathString) {

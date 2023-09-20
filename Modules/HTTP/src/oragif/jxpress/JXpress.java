@@ -16,7 +16,7 @@ public class JXpress implements IRouting {
     private final HttpServer httpServer;
     private final Logger logger;
     private Executor executor;
-    private RequestManager requestManager;
+    private final RequestManager requestManager;
 
     {
         this.logger = new Logger("JXpress");

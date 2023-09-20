@@ -40,7 +40,7 @@ public class Router implements IWorker, IRouting {
                 return;
             }
 
-            RestWorker restWorker = this.restWorkers.get(response.getMethod() + leveledPath);
+            RestWorker restWorker = this.restWorkers.get(request.getMethod() + leveledPath);
             if (restWorker != null) {
                 restWorker.handle(request, response);
                 return;
