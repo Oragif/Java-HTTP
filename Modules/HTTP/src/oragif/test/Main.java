@@ -8,10 +8,12 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         JXpress jXpress = new JXpress();
-        jXpress.listen(8080);
         jXpress.post("/", ((request, response) -> {
             System.out.print(request.getJsonBody(test.class).test);
         }));
+        // jXpress.use((request, response) -> {
+        //     System.out.println("Middleware");
+        // });
         jXpress.get("/", ((request, response) -> {
             response.send("/");
         }));
@@ -26,5 +28,6 @@ public class Main {
             response.send("/test/test2");
         }));
         jXpress.use("/test", router);
+        jXpress.listen(8080);
     }
 }

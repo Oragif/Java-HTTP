@@ -20,6 +20,7 @@ public class RestWorker implements IWorker {
 
     @Override
     public void handle(Request request, Response response) {
+        if (response.isClosed()) return;
         worker.handle(request, response);
     }
 }

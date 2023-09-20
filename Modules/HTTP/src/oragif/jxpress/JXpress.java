@@ -5,6 +5,7 @@ import oragif.jxpress.http.IRequestHandler;
 import oragif.jxpress.http.RequestManager;
 import oragif.jxpress.routing.IRouting;
 import oragif.jxpress.routing.Router;
+import oragif.jxpress.worker.IWorker;
 import oragif.jxpress.worker.Worker;
 import oragif.logger.Logger;
 
@@ -66,5 +67,5 @@ public class JXpress implements IRouting {
     @Override
     public void use(String path, Router router) { this.requestManager.use(path, router); }
     @Override
-    public void use(Worker worker) { this.requestManager.use(worker); }
+    public void use(IWorker worker) { this.requestManager.use(worker); }
 }

@@ -36,7 +36,7 @@ public class Response {
         this.path         = exchange.getRequestURI().getPath();
         this.leveledPath  = splitPath(this.path);
         if (this.leveledPath.length == 0) this.leveledPath = new String[]{"/"};
-        this.maxLevel     = this.leveledPath.length;
+        this.maxLevel     = this.leveledPath.length - 1;
     }
 
     private static String[] splitPath(String pathString) {
@@ -56,7 +56,7 @@ public class Response {
     public String getPath() {
         return this.path;
     }
-    public String getLeveledPath(int level) {
+    public String getLeveledPathFromRoot(int level) {
         return String.join("", Arrays.copyOfRange(this.leveledPath, 0, level));
     }
 
