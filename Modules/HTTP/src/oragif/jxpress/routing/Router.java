@@ -70,7 +70,8 @@ public class Router implements IWorker, IRouting {
     private void addWorker(IWorker worker) {
         workers.add(worker);
     }
-    private void addLayer(String path, Router worker) {
+
+    private void addRouter(String path, Router worker) {
         Router router = this.layers.get(path);
         if (router == null) {
             layers.put(path, worker);
@@ -80,6 +81,20 @@ public class Router implements IWorker, IRouting {
         worker.layers.forEach((router::addLayer));
         worker.restWorkers.forEach(((p, r) -> router.addRestWorker(p.getLeft(), r)));
         worker.workers.forEach(router::addWorker);
+    }
+
+    private void addLayer(String[] paths, Router worker) {
+        if (paths.length > 1) {
+            Router router = new Router();
+            router.addLayer(Arrays.copyOfRange(paths, 1, paths.length), worker);
+            this.addLayer(paths[0], router);
+            return;
+        }
+        this.addRouter(paths[0], worker);
+    }
+
+    private void addLayer(String path, Router worker) {
+        this.addLayer(splitPath(path), worker);
     }
     private void addRestWorker(String path, RestWorker restWorker) {
        this.addRestWorker(splitPath(path), restWorker);

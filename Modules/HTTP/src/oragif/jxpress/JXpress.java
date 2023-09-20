@@ -6,7 +6,6 @@ import oragif.jxpress.http.RequestManager;
 import oragif.jxpress.routing.IRouting;
 import oragif.jxpress.routing.Router;
 import oragif.jxpress.worker.IWorker;
-import oragif.jxpress.worker.Worker;
 import oragif.logger.Logger;
 
 import java.io.IOException;
@@ -28,10 +27,15 @@ public class JXpress implements IRouting {
         this.requestManager = new RequestManager();
     }
 
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
+    }
+
     public void listen(int port) {
         try {
             this.httpServer.bind(new InetSocketAddress(port), 0);
             this.httpServer.createContext("/", this.requestManager);
+            this.httpServer.setExecutor(this.executor);
             this.httpServer.start();
 
             logger.info("Server started on local address: http://localhost:"+ port);
