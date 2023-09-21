@@ -6,7 +6,6 @@ import oragif.jxpress.http.Response;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileReader extends Middleware {
@@ -20,13 +19,13 @@ public class FileReader extends Middleware {
         try {
             File file = this.filePath.toFile();
             Scanner scanner = new Scanner(file);
-            String fileContents = "";
+            StringBuilder fileContents = new StringBuilder();
             while (scanner.hasNextLine()) {
-                fileContents += scanner.nextLine();
+                fileContents.append(scanner.nextLine());
             }
             scanner.close();
             this.mimeType = getMimeType(file);
-            return fileContents;
+            return fileContents.toString();
         } catch (FileNotFoundException e) {
             return null;
         }
