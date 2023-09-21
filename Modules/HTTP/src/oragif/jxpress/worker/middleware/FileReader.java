@@ -6,6 +6,7 @@ import oragif.jxpress.http.Response;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileReader extends Middleware {
@@ -52,12 +53,12 @@ public class FileReader extends Middleware {
     private static String getMimeType(File file) {
         String fileType = getFileExtension(file);
 
-        switch (fileType) {
-            case ("html"): return "text/html";
-            case ("js"): return "text/javascript";
-            case ("json"): return "application/json";
-            case ("png"): return "image/png";
-            default: return "text/plain";
-        }
+        return switch (fileType) {
+            case ("html") -> "text/html";
+            case ("js") -> "text/javascript";
+            case ("json") -> "application/json";
+            case ("png") -> "image/png";
+            default -> "text/plain";
+        };
     }
 }
