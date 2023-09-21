@@ -8,9 +8,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 public class Response {
@@ -22,6 +20,7 @@ public class Response {
     private int maxLevel;
     private String path;
     private String[] leveledPath;
+    private HashMap<String, String[]> parameters;
     private int responseCode;
 
     {
@@ -35,8 +34,26 @@ public class Response {
         this.headers      = exchange.getResponseHeaders();
         this.path         = exchange.getRequestURI().getPath();
         this.leveledPath  = splitPath(this.path);
+        this.parameters   = this.getPathParameters();
         if (this.leveledPath.length == 0) this.leveledPath = new String[]{"/"};
         this.maxLevel     = this.leveledPath.length - 1;
+    }
+
+    private HashMap<String, String[]> getPathParameters() {
+        String query = exchange.getRequestURI().getQuery();
+        HashMap<String, String[]> parameters = new HashMap<>();
+        if (query == null) return parameters;
+
+        String[] splitParameters = query.split("[&]");
+        for (String param: splitParameters) {
+            String[] keyValue = param.split("=");
+
+            if (keyValue.length < 2) continue;
+
+            String[] values = keyValue[1].split(",");
+            parameters.put(keyValue[0], values);
+        }
+        return parameters;
     }
 
     private static String[] splitPath(String pathString) {
@@ -51,6 +68,14 @@ public class Response {
 
     public boolean isClosed() {
         return closed;
+    }
+
+    public HashMap<String, String[]> getParameters() {
+        return this.parameters;
+    }
+
+    public String[] getParameter(String key) {
+        return this.parameters.get(key);
     }
 
     public String getPath() {
