@@ -5,13 +5,11 @@ import oragif.jxpress.http.Request;
 import oragif.jxpress.http.Response;
 import oragif.jxpress.worker.IWorker;
 import oragif.jxpress.worker.RestWorker;
-import oragif.jxpress.worker.Worker;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

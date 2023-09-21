@@ -122,6 +122,10 @@ public class Response {
         this.headers.put(header, value);
     }
 
+    public void setContentType(String type) {
+        this.addHeader("Content-Type", type);
+    }
+
     public boolean send(String message) {
         try {
             byte[] byteMessage = message.getBytes(StandardCharsets.UTF_8);

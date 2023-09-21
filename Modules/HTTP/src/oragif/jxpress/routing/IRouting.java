@@ -2,7 +2,6 @@ package oragif.jxpress.routing;
 
 import oragif.jxpress.http.IRequestHandler;
 import oragif.jxpress.worker.IWorker;
-import oragif.jxpress.worker.Worker;
 
 public interface IRouting {
     public void get(String path, IRequestHandler method);

@@ -1,6 +1,6 @@
 package oragif.jxpress.worker.middleware;
 
-import oragif.jxpress.worker.Worker;
+import oragif.jxpress.worker.IWorker;
 
-public class Middleware extends Worker {
+public abstract class Middleware implements IWorker {
 }
