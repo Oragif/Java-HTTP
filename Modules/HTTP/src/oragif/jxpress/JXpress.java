@@ -6,8 +6,10 @@ import oragif.jxpress.http.RequestManager;
 import oragif.jxpress.routing.IRouting;
 import oragif.jxpress.routing.Router;
 import oragif.jxpress.worker.IWorker;
+import oragif.jxpress.worker.middleware.WebFolder;
 import oragif.logger.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executor;
@@ -25,6 +27,10 @@ public class JXpress implements IRouting {
     public JXpress() throws IOException {
         this.httpServer = HttpServer.create();
         this.requestManager = new RequestManager();
+    }
+
+    public void printRouteTree() {
+        this.requestManager.printRouteTree("", 0);
     }
 
     public void setExecutor(Executor executor) {
@@ -69,7 +75,27 @@ public class JXpress implements IRouting {
     }
 
     @Override
-    public void use(String path, Router router) { this.requestManager.use(path, router); }
+    public void use(String path, Router router) {
+        this.requestManager.use(path, router);
+    }
+
     @Override
-    public void use(IWorker worker) { this.requestManager.use(worker); }
+    public void use(String path, IWorker worker) {
+        this.requestManager.use(path, worker);
+    }
+
+    @Override
+    public void use(IWorker worker) {
+        this.requestManager.use(worker);
+    }
+
+    @Override
+    public void webFolder(String path, String folderPath) {
+        this.requestManager.webFolder(path, folderPath);
+    }
+
+    @Override
+    public void publicFolder(String folderPath) {
+        this.requestManager.publicFolder(folderPath);
+    }
 }

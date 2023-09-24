@@ -2,17 +2,18 @@ package oragif.jxpress.http;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import oragif.jxpress.worker.Method;
 
 import java.io.IOException;
 
 public class Request {
     private final HttpExchange exchange;
-    private final String method;
+    private final Method method;
     private byte[] body;
 
     public Request(HttpExchange exchange) {
         this.exchange = exchange;
-        this.method   = exchange.getRequestMethod();
+        this.method   = Method.valueOf(exchange.getRequestMethod());
         this.readBody();
     }
 
@@ -24,7 +25,7 @@ public class Request {
         }
     }
 
-    public String getMethod() {
+    public Method getMethod() {
         return method;
     }
 

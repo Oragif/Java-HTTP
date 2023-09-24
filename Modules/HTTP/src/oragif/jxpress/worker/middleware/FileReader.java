@@ -2,6 +2,8 @@ package oragif.jxpress.worker.middleware;
 
 import oragif.jxpress.http.Request;
 import oragif.jxpress.http.Response;
+import oragif.jxpress.worker.IWorker;
+import oragif.jxpress.worker.Method;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +14,7 @@ public class FileReader extends Middleware {
     private Path filePath;
     private String mimeType;
     public FileReader(Path filePath) {
+        this.method   = Method.GET;
         this.filePath = filePath;
     }
 
@@ -53,10 +56,10 @@ public class FileReader extends Middleware {
         String fileType = getFileExtension(file);
 
         return switch (fileType) {
-            case ("html") -> "text/html";
-            case ("js") -> "text/javascript";
-            case ("json") -> "application/json";
-            case ("png") -> "image/png";
+            case (".html") -> "text/html";
+            case (".js") -> "text/javascript";
+            case (".json") -> "application/json";
+            case (".png") -> "image/png";
             default -> "text/plain";
         };
     }

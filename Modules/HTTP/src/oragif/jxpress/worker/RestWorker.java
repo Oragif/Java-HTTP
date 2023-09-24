@@ -5,22 +5,22 @@ import oragif.jxpress.http.Request;
 import oragif.jxpress.http.Response;
 
 public class RestWorker implements IWorker {
-
-    private final String requestMethod;
     private final IRequestHandler worker;
+    private final Method method;
 
-    public RestWorker(String requestMethod, IRequestHandler worker) {
-        this.requestMethod = requestMethod;
-        this.worker        = worker;
-    }
-
-    public String getRequestMethod() {
-        return requestMethod;
+    public RestWorker(Method requestMethod, IRequestHandler worker) {
+        this.method = requestMethod;
+        this.worker = worker;
     }
 
     @Override
     public void handle(Request request, Response response) {
         if (response.isClosed()) return;
         worker.handle(request, response);
+    }
+
+    @Override
+    public Method getMethod() {
+        return this.method;
     }
 }

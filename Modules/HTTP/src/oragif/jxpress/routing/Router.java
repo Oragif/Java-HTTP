@@ -4,10 +4,13 @@ import oragif.jxpress.http.IRequestHandler;
 import oragif.jxpress.http.Request;
 import oragif.jxpress.http.Response;
 import oragif.jxpress.worker.IWorker;
+import oragif.jxpress.worker.Method;
 import oragif.jxpress.worker.RestWorker;
+import oragif.jxpress.worker.middleware.WebFolder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -22,13 +25,24 @@ public class Router implements IWorker, IRouting {
     // Routers
     protected HashMap<String, Router> layers;
     // Endpoints <Path, Method>
-    protected HashMap<Pair<String, String>, RestWorker> restWorkers;
+    protected HashMap<Pair<String, Method>, IWorker> endpoints;
     protected String root;
+    protected Method method;
 
     {
-        this.workers     = new ArrayList<>();
-        this.layers      = new HashMap<>();
-        this.restWorkers = new HashMap<>();
+        this.workers   = new ArrayList<>();
+        this.layers    = new HashMap<>();
+        this.endpoints = new HashMap<>();
+        this.method    = Method.ROUTER;
+    }
+
+    public void printRouteTree(String path, int depth) {
+        System.out.println("-".repeat(depth * 3) + "   Base: " + path + " - Middleware Count: " + this.workers.size());
+        endpoints.forEach((stringMethodPair, worker) -> System.out.println("-".repeat(depth * 3) + "      " + path + stringMethodPair.getLeft() + " : " + stringMethodPair.getRight() + " : " + worker.getClass().getName()));
+        layers.forEach((s, router) -> {
+            System.out.println("");
+            router.printRouteTree(path + s, depth + 1);
+        });
     }
 
     private static String[] splitPath(String pathString) {
@@ -43,9 +57,9 @@ public class Router implements IWorker, IRouting {
         if (this.root != "") response.nextLevel();
         this.triggerWorkers(request, response);
         if (response.getLevel() == response.getMaxLevel()) {
-            RestWorker restWorker = this.restWorkers.get(new ImmutablePair<>(response.getCurrentLeveledPath(), request.getMethod()));
-            if (restWorker != null) {
-                restWorker.handle(request, response);
+            IWorker endpoint = this.endpoints.get(new ImmutablePair<>(response.getCurrentLeveledPath(), request.getMethod()));
+            if (endpoint != null) {
+                endpoint.handle(request, response);
             }
             return;
         }
@@ -54,6 +68,11 @@ public class Router implements IWorker, IRouting {
         if (layer != null) {
             layer.handle(request, response);
         }
+    }
+
+    @Override
+    public Method getMethod() {
+        return this.method;
     }
 
     private void triggerWorkers(Request request, Response response) {
@@ -77,7 +96,7 @@ public class Router implements IWorker, IRouting {
         }
         // If router already exists at that path, add all new entries to the old router
         worker.layers.forEach((router::addLayer));
-        worker.restWorkers.forEach(((p, r) -> router.addRestWorker(p.getLeft(), r)));
+        worker.endpoints.forEach(((p, r) -> router.addEndpoint(p.getLeft(), r)));
         worker.workers.forEach(router::addWorker);
     }
 
@@ -94,18 +113,18 @@ public class Router implements IWorker, IRouting {
     private void addLayer(String path, Router worker) {
         this.addLayer(splitPath(path), worker);
     }
-    private void addRestWorker(String path, RestWorker restWorker) {
-       this.addRestWorker(splitPath(path), restWorker);
+    private void addEndpoint(String path, IWorker restWorker) {
+       this.addEndpoint(splitPath(path), restWorker);
     }
 
-    private void addRestWorker(String[] paths, RestWorker restWorker) {
+    private void addEndpoint(String[] paths, IWorker restWorker) {
         if (paths.length > 1) {
             Router router = new Router();
-            router.addRestWorker(Arrays.copyOfRange(paths, 1, paths.length), restWorker);
+            router.addEndpoint(Arrays.copyOfRange(paths, 1, paths.length), restWorker);
             this.addLayer(paths[0], router);
             return;
         }
-        this.restWorkers.put(new ImmutablePair<>(paths[0], restWorker.getRequestMethod()), restWorker);
+        this.endpoints.put(new ImmutablePair<>(paths[0], restWorker.getMethod()), restWorker);
     }
 
     public void setRoot(String root) {
@@ -114,22 +133,22 @@ public class Router implements IWorker, IRouting {
 
     @Override
     public void get(String path, IRequestHandler method) {
-        this.addRestWorker(path, new RestWorker("GET", method));
+        this.addEndpoint(path, new RestWorker(Method.GET, method));
     }
 
     @Override
     public void post(String path, IRequestHandler method) {
-        this.addRestWorker(path, new RestWorker("POST", method));
+        this.addEndpoint(path, new RestWorker(Method.POST, method));
     }
 
     @Override
     public void put(String path, IRequestHandler method) {
-        this.addRestWorker(path, new RestWorker("PUT", method));
+        this.addEndpoint(path, new RestWorker(Method.PUT, method));
     }
 
     @Override
     public void delete(String path, IRequestHandler method) {
-        this.addRestWorker(path, new RestWorker("DELETE", method));
+        this.addEndpoint(path, new RestWorker(Method.DELETE, method));
     }
 
     @Override
@@ -137,6 +156,22 @@ public class Router implements IWorker, IRouting {
         this.addLayer(path, router);
         router.setRoot(path);
     }
+
+    @Override
+    public void use(String path, IWorker worker) {
+        this.addEndpoint(path, worker);
+    }
+
     @Override
     public void use(IWorker worker) { this.addWorker(worker); }
+
+    @Override
+    public void webFolder(String path, String folderPath) {
+        WebFolder.mapFolder(path, new File(folderPath), this);
+    }
+
+    @Override
+    public void publicFolder(String folderPath) {
+        WebFolder.mapFolder("/", new File(folderPath), this);
+    }
 }
