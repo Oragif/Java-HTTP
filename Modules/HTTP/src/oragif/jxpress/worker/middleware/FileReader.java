@@ -2,7 +2,6 @@ package oragif.jxpress.worker.middleware;
 
 import oragif.jxpress.http.Request;
 import oragif.jxpress.http.Response;
-import oragif.jxpress.worker.IWorker;
 import oragif.jxpress.worker.Method;
 
 import java.io.File;

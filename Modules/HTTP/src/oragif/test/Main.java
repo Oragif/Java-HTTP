@@ -3,9 +3,7 @@ package oragif.test;
 import oragif.jxpress.JXpress;
 import oragif.jxpress.routing.Router;
 import oragif.jxpress.worker.middleware.FileReader;
-import oragif.jxpress.worker.middleware.WebFolder;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -16,7 +14,7 @@ public class Main {
             System.out.print(request.getJsonBody(test.class).test);
         }));
 
-        jXpress.publicFolder("website");
+        jXpress.webFolder("/foldertest","website");
 
         jXpress.get("/", ((request, response) -> {
             response.send("/");

@@ -81,6 +81,7 @@ public class Response {
     public String getPath() {
         return this.path;
     }
+
     public String getLeveledPathFromRoot(int level) {
         return String.join("", Arrays.copyOfRange(this.leveledPath, 0, level));
     }
@@ -92,15 +93,19 @@ public class Response {
     public String getCurrentLeveledPath() {
         return this.leveledPath[this.level];
     }
+
     public int getLevel() {
         return this.level;
     }
+
     public int getMaxLevel() {
         return this.maxLevel;
     }
+
     public void setLevel(int level) {
         this.level = level;
     }
+
     public int nextLevel() {
         this.level += 1;
         return this.getLevel();
