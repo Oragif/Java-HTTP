@@ -1,4 +1,4 @@
-package oragif.jxpress;
+package oragif.jxpress.routing;
 
 import oragif.jxpress.worker.Method;
 

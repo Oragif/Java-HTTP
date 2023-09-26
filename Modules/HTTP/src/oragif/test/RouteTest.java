@@ -1,6 +1,6 @@
 package oragif.test;
 
-import oragif.jxpress.Route;
+import oragif.jxpress.routing.Route;
 import oragif.jxpress.http.IRequestHandler;
 import oragif.jxpress.http.Request;
 import oragif.jxpress.http.Response;
