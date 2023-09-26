@@ -4,4 +4,6 @@ module oragif.http {
     requires logger;
     requires com.google.gson;
     requires org.apache.commons.lang3;
+    requires org.reflections;
+    requires org.slf4j;
 }

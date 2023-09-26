@@ -1,42 +1,13 @@
 package oragif.test;
 
 import oragif.jxpress.JXpress;
-import oragif.jxpress.routing.Router;
-import oragif.jxpress.worker.middleware.FileReader;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        JXpress jXpress = new JXpress();
-        jXpress.post("/", ((request, response) -> {
-            System.out.print(request.getJsonBody(test.class).test);
-        }));
-
-        jXpress.webFolder("/foldertest","website");
-
-        jXpress.get("/", ((request, response) -> {
-            response.send("/");
-        }));
-
-        jXpress.get("/test", ((request, response) -> {
-            response.send("/test");
-        }));
-
-        jXpress.get("/test/test", ((request, response) -> {
-            response.send("/test/test");
-        }));
-
-        Router router = new Router();
-        router.get("/test2", ((request, response) -> {
-            response.send("/test/test2");
-        }));
-
-        jXpress.use("/test", router);
-
-        jXpress.use("/filetest", new FileReader(Path.of("website/test.html")));
-        jXpress.printRouteTree();
+        JXpress jXpress = new JXpress("oragif.test");
         jXpress.listen(8080);
+        jXpress.printRouteTree();
     }
 }

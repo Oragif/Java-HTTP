@@ -63,3 +63,20 @@ jXpress.publicFolder(String folderPath);
 ```java
 jXpress.use((request, response) -> void);
 ```
+
+## Routes using annotations
+Create a class as such, it will automatically get added to the route pool
+```java
+//path, method, provides all optional
+@Route(path = "/routetest", method = Method.GET, provides = "text/plain")
+public class className implements IRequestHandler
+
+@Route
+public class className implements IRequestHandler
+```
+### It's recommended to specify which packages to search
+```java
+new JXpress(String... packages);
+// Example:
+JXpress jXpress = new JXpress("oragif.test", "oragif.jxpress.http");
+```

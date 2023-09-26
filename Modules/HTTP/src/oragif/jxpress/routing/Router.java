@@ -36,16 +36,16 @@ public class Router implements IWorker, IRouting {
         this.method    = Method.ROUTER;
     }
 
-    public void printRouteTree(String path, int depth) {
+    public void printRouteTree(String path, int depth, int port) {
         System.out.println("-".repeat(depth * 3) + "   Base: " + path + " - Middleware Count: " + this.workers.size());
-        endpoints.forEach((stringMethodPair, worker) -> System.out.println("-".repeat(depth * 3) + "      " + path + stringMethodPair.getLeft() + " : " + stringMethodPair.getRight() + " : " + worker.getClass().getName()));
+        endpoints.forEach((stringMethodPair, worker) -> System.out.println("-".repeat(depth * 3) + "      http://localhost:" + port + path + stringMethodPair.getLeft() + " : " + stringMethodPair.getRight() + " : " + worker.getClass().getName()));
         layers.forEach((s, router) -> {
             System.out.println("");
-            router.printRouteTree(path + s, depth + 1);
+            router.printRouteTree(path + s, depth + 1, port);
         });
     }
 
-    private static String[] splitPath(String pathString) {
+    public static String[] splitPath(String pathString) {
         if (pathString.compareTo("/") == 0) return new String[]{"/"};
         Path path = Paths.get(pathString);
         return StreamSupport.stream(path.spliterator(), false).map(path1 -> "/".concat(path1.toString())).toArray(String[]::new);
@@ -117,7 +117,7 @@ public class Router implements IWorker, IRouting {
        this.addEndpoint(splitPath(path), restWorker);
     }
 
-    private void addEndpoint(String[] paths, IWorker restWorker) {
+    public void addEndpoint(String[] paths, IWorker restWorker) {
         if (paths.length > 1) {
             Router router = new Router();
             router.addEndpoint(Arrays.copyOfRange(paths, 1, paths.length), restWorker);
