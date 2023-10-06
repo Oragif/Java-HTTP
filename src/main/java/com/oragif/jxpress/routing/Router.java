@@ -36,12 +36,31 @@ public class Router implements IWorker, IRouting {
         this.method    = Method.ROUTER;
     }
 
+    /**
+     * Recursively print the Route tree to console.
+     * @param path The path of the route
+     * @param depth The depth of the route in the tree
+     * @param port The port number
+     */
     public void printRouteTree(String path, int depth, int port) {
-        System.out.println("|-" + "-".repeat(depth * 3) + "| " + (path.compareTo("") == 0 ? "/" : path) + " : Middleware Count: " + this.workers.size());
-        endpoints.forEach((stringMethodPair, worker) -> System.out.println(("|-" + "-".repeat( 3)).repeat(depth) + "|-" + "--- http://localhost:" + port + path + stringMethodPair.getLeft() + " : " + stringMethodPair.getRight() + " : " + worker.getClass().getSimpleName()));
-        layers.forEach((s, router) -> {
-            router.printRouteTree(path + s, depth + 1, port);
+        String indent = "";
+        if (depth != 0) indent = "┣" + "━".repeat(depth * 3);
+        String route = path.isEmpty() ? "/" : path;
+        int middlewareCount = this.workers.size();
+
+        System.out.printf("%s┫ %s : Middleware Count: %d%n", indent, route, middlewareCount);
+
+        endpoints.forEach((stringMethodPair, worker) -> {
+            String endpointIndent = ("┃" + " ".repeat(3)).repeat(depth);
+            String endpointPath = stringMethodPair.getLeft();
+            Method endpointMethod = stringMethodPair.getRight();
+            String workerClass = worker.getClass().getSimpleName();
+
+            System.out.printf("%s┣━━━ http://localhost:%d%s%s : %s : %s%n",
+                    endpointIndent, port, path, endpointPath, endpointMethod, workerClass);
         });
+
+        layers.forEach((s, router) -> router.printRouteTree(path + s, depth + 1, port));
     }
 
     public static String[] splitPath(String pathString) {
