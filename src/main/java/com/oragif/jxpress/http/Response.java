@@ -23,12 +23,14 @@ public class Response {
     private HashMap<String, String[]> parameters;
     private int responseCode;
 
+    private Request request;
+
     {
         this.responseCode = 200;
         this.closed = false;
     }
 
-    public Response(HttpExchange exchange) {
+    public Response(HttpExchange exchange, Request request) {
         this.exchange     = exchange;
         this.outputStream = exchange.getResponseBody();
         this.headers      = exchange.getResponseHeaders();
@@ -37,6 +39,7 @@ public class Response {
         this.parameters   = this.getPathParameters();
         if (this.leveledPath.length == 0) this.leveledPath = new String[]{"/"};
         this.maxLevel     = this.leveledPath.length - 1;
+        this.request = request;
     }
 
     private HashMap<String, String[]> getPathParameters() {
@@ -100,10 +103,6 @@ public class Response {
 
     public int getMaxLevel() {
         return this.maxLevel;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public int nextLevel() {

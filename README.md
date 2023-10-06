@@ -1,9 +1,5 @@
 # Java-HTTP
-
-Hobby project for getting more proficient in Java and Java HttpServer.
-It do be spaghetti code
-
-Thanks for coming to my TED talk
+Building an HTTP routing system with inspiration from Express.js.
 
 # Functionality
 ## Creating New HTTP Server & Router
@@ -19,6 +15,19 @@ Can also be done for individual routers
 ```java
 jXpress.printRouteTree();
 ```
+
+### Set 404 route
+```java
+jXpress.set404((request, response) -> void);
+```
+
+### Enable sessiondata
+```java
+jXpress.enableSession();
+jXpress.disableSession();
+```
+
+
 ## Basic
 ### GET
 ```java
@@ -67,16 +76,14 @@ jXpress.use((request, response) -> void);
 ## Routes using annotations
 Create a class as such, it will automatically get added to the route pool
 ```java
-//path, method, provides all optional
-@Route(path = "/routetest", method = Method.GET, provides = "text/plain")
+//path, method, provides all optional, the ones used below are the default values
+@Route(path = "/", method = Method.GET, provides = "text/plain")
 public class className implements IRequestHandler
 
 @Route
 public class className implements IRequestHandler
 ```
-### It's recommended to specify which packages to search
-```java
-new JXpress(String... packages);
-// Example:
-JXpress jXpress = new JXpress("oragif.test", "oragif.jxpress.http");
-```
+
+## Request
+
+## Response

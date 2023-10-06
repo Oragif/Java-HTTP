@@ -76,6 +76,18 @@ public class JXpress implements IRouting {
         this.httpServer.stop(10);
     }
 
+    public void set404(IRequestHandler method) {
+        this.requestManager.set404(method);
+    }
+
+    public void enableSession() {
+        this.requestManager.enableSession();
+    }
+
+    public void disableSession() {
+        this.requestManager.disableSession();
+    }
+
     @Override
     public void get(String path, IRequestHandler method) {
         this.requestManager.get(path, method);
