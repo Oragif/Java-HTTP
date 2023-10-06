@@ -37,10 +37,9 @@ public class Router implements IWorker, IRouting {
     }
 
     public void printRouteTree(String path, int depth, int port) {
-        System.out.println("-".repeat(depth * 3) + "   Base: " + path + " - Middleware Count: " + this.workers.size());
-        endpoints.forEach((stringMethodPair, worker) -> System.out.println("-".repeat(depth * 3) + "      http://localhost:" + port + path + stringMethodPair.getLeft() + " : " + stringMethodPair.getRight() + " : " + worker.getClass().getName()));
+        System.out.println("|-" + "-".repeat(depth * 3) + "| " + (path.compareTo("") == 0 ? "/" : path) + " : Middleware Count: " + this.workers.size());
+        endpoints.forEach((stringMethodPair, worker) -> System.out.println(("|-" + "-".repeat( 3)).repeat(depth) + "|-" + "--- http://localhost:" + port + path + stringMethodPair.getLeft() + " : " + stringMethodPair.getRight() + " : " + worker.getClass().getSimpleName()));
         layers.forEach((s, router) -> {
-            System.out.println("");
             router.printRouteTree(path + s, depth + 1, port);
         });
     }
