@@ -9,17 +9,11 @@ import com.oragif.jxpress.routing.Router;
 import com.oragif.jxpress.util.Logger;
 import com.oragif.jxpress.worker.IWorker;
 import com.oragif.jxpress.worker.RestWorker;
-import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
+import org.atteo.classindex.ClassIndex;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executor;
 
 public class JXpress implements IRouting {
@@ -33,53 +27,28 @@ public class JXpress implements IRouting {
         this.logger = new Logger("JXpress");
     }
 
-    public JXpress(String... packages) throws IOException {
+    public JXpress() throws IOException {
         this.httpServer = HttpServer.create();
         this.requestManager = new RequestManager();
-        this.getAnnotatedRoutes(packages);
+        this.getAnnotatedRoutes();
     }
 
-    public JXpress() throws IOException {
-        this(null);
-    }
     private void getAnnotatedRoutes() {
-    }
-    private void getAnnotatedRoutes(String[] packages) {
-        ConfigurationBuilder configurationBuilder = getConfigurationBuilder(packages);
-        Reflections reflections = new Reflections(configurationBuilder);
-        Set<Class<?>> routes = reflections.getTypesAnnotatedWith(Route.class);
-        routes.stream().forEach(aClass -> {
-                if (Arrays.stream(aClass.getInterfaces()).anyMatch(aClass1 -> aClass1.getName() == IRequestHandler.class.getName())) {
-                    IRequestHandler requestHandler;
-                    try {
-                        requestHandler = aClass.asSubclass(IRequestHandler.class).newInstance();
-                    } catch (InstantiationException | IllegalAccessException e) {
-                        return;
-                    }
-                    this.requestManager.addEndpoint(
-                            this.requestManager.splitPath(aClass.getAnnotation(Route.class).path()),
-                            new RestWorker(aClass.getAnnotation(Route.class).method(), requestHandler)
-                    );
+        Iterable<Class<?>> classes = ClassIndex.getAnnotated(Route.class);
+        classes.forEach(aClass -> {
+            if (Arrays.stream(aClass.getInterfaces()).anyMatch(aClass1 -> aClass1.getName() == IRequestHandler.class.getName())) {
+                IRequestHandler requestHandler;
+                try {
+                    requestHandler = aClass.asSubclass(IRequestHandler.class).newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    return;
                 }
+                this.requestManager.addEndpoint(
+                        this.requestManager.splitPath(aClass.getAnnotation(Route.class).path()),
+                        new RestWorker(aClass.getAnnotation(Route.class).method(), requestHandler)
+                );
             }
-        );
-    }
-
-    private static ConfigurationBuilder getConfigurationBuilder(String[] packages) {
-        ConfigurationBuilder configurationBuilder;
-        if (packages == null) {
-            Collection<URL> allPackagePrefixes = Arrays.stream(Package.getPackages()).map(p -> p.getName())
-                    .map(s -> s.split("\\.")[0]).distinct().map(s -> ClasspathHelper.forPackage(s)).reduce((c1, c2) -> {
-                        Collection<URL> c3 = new HashSet<>();
-                        c3.addAll(c1);
-                        c3.addAll(c2);
-                        return c3;
-                    }).get();
-            configurationBuilder = new ConfigurationBuilder().addUrls(allPackagePrefixes);
-        } else {
-            configurationBuilder = new ConfigurationBuilder().forPackages(packages);
-        }
-        return configurationBuilder;
+        });
     }
 
     public void printRouteTree() {
