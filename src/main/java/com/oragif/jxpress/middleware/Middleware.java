@@ -1,4 +1,4 @@
-package com.oragif.jxpress.worker.middleware;
+package com.oragif.jxpress.middleware;
 
 import org.atteo.classindex.IndexAnnotated;
 

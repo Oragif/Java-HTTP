@@ -1,4 +1,4 @@
-package com.oragif.jxpress.worker.middleware;
+package com.oragif.jxpress.middleware;
 
 import com.oragif.jxpress.http.Request;
 import com.oragif.jxpress.http.Response;

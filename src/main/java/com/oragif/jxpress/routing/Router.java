@@ -57,13 +57,19 @@ public class Router extends Routing {
     }
 
     private boolean triggerEndpoint(Request request, Response response) {
+        if (response.getLevel() < response.getMaxLevel()) return false;
+
+        String path = "/";
         if (response.getLevel() == response.getMaxLevel()) {
-            Worker endpoint = this.endpoints.get(new ImmutablePair<>(response.getCurrentLeveledPath(), request.getMethod()));
-            if (endpoint != null) {
-                endpoint.handle(request, response);
-            }
+            path = response.getCurrentLeveledPath();
+        }
+
+        Worker endpoint = this.endpoints.get(new ImmutablePair<>(path, request.getMethod()));
+        if (endpoint != null) {
+            endpoint.handle(request, response);
             return true;
         }
+
         return false;
     }
 

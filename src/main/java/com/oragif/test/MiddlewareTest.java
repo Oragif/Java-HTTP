@@ -3,7 +3,7 @@ package com.oragif.test;
 import com.oragif.jxpress.http.Request;
 import com.oragif.jxpress.http.Response;
 import com.oragif.jxpress.worker.Worker;
-import com.oragif.jxpress.worker.middleware.Middleware;
+import com.oragif.jxpress.middleware.Middleware;
 
 @Middleware(path = "/")
 public class MiddlewareTest extends Worker {

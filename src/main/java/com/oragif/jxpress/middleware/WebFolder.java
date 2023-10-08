@@ -1,11 +1,8 @@
-package com.oragif.jxpress.worker.middleware;
-
-import com.oragif.jxpress.routing.Router;
+package com.oragif.jxpress.middleware;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class WebFolder {
 

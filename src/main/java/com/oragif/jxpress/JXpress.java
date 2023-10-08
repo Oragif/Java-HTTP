@@ -1,7 +1,7 @@
 package com.oragif.jxpress;
 
 import com.oragif.jxpress.routing.Routing;
-import com.oragif.jxpress.worker.middleware.Middleware;
+import com.oragif.jxpress.middleware.Middleware;
 import com.sun.net.httpserver.HttpServer;
 import com.oragif.jxpress.http.IRequestHandler;
 import com.oragif.jxpress.http.RequestManager;

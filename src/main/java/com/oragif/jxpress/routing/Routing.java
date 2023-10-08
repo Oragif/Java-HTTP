@@ -4,8 +4,8 @@ import com.oragif.jxpress.http.IRequestHandler;
 import com.oragif.jxpress.worker.Worker;
 import com.oragif.jxpress.worker.Method;
 import com.oragif.jxpress.worker.RestWorker;
-import com.oragif.jxpress.worker.middleware.FileReader;
-import com.oragif.jxpress.worker.middleware.WebFolder;
+import com.oragif.jxpress.middleware.FileReader;
+import com.oragif.jxpress.middleware.WebFolder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 

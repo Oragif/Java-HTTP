@@ -7,15 +7,11 @@ import com.oragif.jxpress.routing.Router;
 import java.util.HashMap;
 
 public class RequestManager extends Router implements HttpHandler {
-    HashMap<String, SessionData> sessionData;
-    boolean sessionEnabled;
 
     private IRequestHandler notFoundEndpoint;
 
     {
         this.setRoot("");
-        this.sessionData = new HashMap<>();
-        this.sessionEnabled = false;
         this.set404(((request, response) -> {
             response.send("404 not found");
         }));
