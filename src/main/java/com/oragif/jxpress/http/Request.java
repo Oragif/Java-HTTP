@@ -18,6 +18,7 @@ public class Request {
     private HashMap<String, List<String>> headers;
     private HashMap<String, String[]> parameters;
     private HashMap<String, Object> middlewareData;
+    private String ip;
 
     {
         this.headers = new HashMap<>();
@@ -31,6 +32,7 @@ public class Request {
         this.readBody();
         this.readHeaders();
         this.parameters   = this.getPathParameters();
+        this.ip = exchange.getRemoteAddress().getHostName();
     }
 
     private void readHeaders() {
@@ -109,5 +111,9 @@ public class Request {
 
     public void setMiddlewareData(String key, Object data) {
         this.middlewareData.put(key, data);
+    }
+
+    public String getIp() {
+        return this.ip;
     }
 }
