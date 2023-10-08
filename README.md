@@ -130,6 +130,20 @@ request.getParameter(String key);
 request.getParameters();
 ```
 
+### Middleware Data
+A way of keeping track of data throughout handling of requests.
+#### Add data
+```java
+request.setMiddlewareData(String key, Object data);
+```
+#### Retrieving data
+```java
+// Get a single value
+request.getMiddlewareData(String key);
+// Get the entire HashMap
+request.getAllMiddlewareData();
+```
+
 ## Response
 ### Send
 Once a message is sent, the stream automatically closes

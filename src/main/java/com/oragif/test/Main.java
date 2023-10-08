@@ -8,7 +8,10 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         JXpress jXpress = new JXpress();
-        jXpress.get("/test", (request, response) -> {response.send("Test");});
+        jXpress.get("/test", (request, response) -> {
+            String test = (String) request.getMiddlewareData("test");
+            response.send("Test: " + test);
+        });
         jXpress.get("/test1", (request, response) -> {response.send("Test");});
         jXpress.get("/test2", (request, response) -> {response.send("Test");});
         jXpress.get("/test3", (request, response) -> {response.send("Test");});

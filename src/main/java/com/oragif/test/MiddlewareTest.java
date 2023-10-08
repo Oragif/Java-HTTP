@@ -9,6 +9,7 @@ import com.oragif.jxpress.worker.middleware.Middleware;
 public class MiddlewareTest extends Worker {
     @Override
     public void handle(Request request, Response response) {
+        request.setMiddlewareData("test", "Data from middleware");
         response.addHeader("Test", "Middleware Worked");
     }
 }

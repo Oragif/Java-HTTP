@@ -3,8 +3,13 @@ package com.oragif.jxpress.http;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
+import javax.management.ObjectInstance;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,7 +26,6 @@ public class Response {
     private String path;
     private String[] leveledPath;
     private int responseCode;
-
 
     {
         this.responseCode = 200;

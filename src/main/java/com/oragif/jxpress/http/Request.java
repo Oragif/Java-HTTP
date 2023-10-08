@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class Request {
     private final HttpExchange exchange;
@@ -16,9 +17,11 @@ public class Request {
     private HashMap<String, String> cookies;
     private HashMap<String, List<String>> headers;
     private HashMap<String, String[]> parameters;
+    private HashMap<String, Object> middlewareData;
 
     {
         this.headers = new HashMap<>();
+        this.middlewareData = new HashMap<>();
     }
 
     public Request(HttpExchange exchange, HashMap<String, String> cookies) {
@@ -94,5 +97,17 @@ public class Request {
     }
     public List<String> getHeader(String key) {
         return this.headers.get(key);
+    }
+
+    public HashMap<String, Object> getAllMiddlewareData() {
+        return middlewareData;
+    }
+
+    public Object getMiddlewareData(String key) {
+        return middlewareData.get(key);
+    }
+
+    public void setMiddlewareData(String key, Object data) {
+        this.middlewareData.put(key, data);
     }
 }
