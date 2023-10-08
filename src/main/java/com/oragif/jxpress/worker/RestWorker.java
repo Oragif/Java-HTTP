@@ -4,7 +4,7 @@ import com.oragif.jxpress.http.IRequestHandler;
 import com.oragif.jxpress.http.Request;
 import com.oragif.jxpress.http.Response;
 
-public class RestWorker implements IWorker {
+public class RestWorker extends Worker {
     private final IRequestHandler worker;
     private final Method method;
 

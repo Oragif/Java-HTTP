@@ -27,7 +27,6 @@ public class Main {
         jXpress.set404((request, response) -> {
             response.send("Hippiti hoppiti the path is not a property");
         });
-        jXpress.enableSession();
         jXpress.listen(8080);
         jXpress.printRouteTree();
     }

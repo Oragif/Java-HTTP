@@ -21,13 +21,6 @@ jXpress.printRouteTree();
 jXpress.set404((request, response) -> void);
 ```
 
-### Enable sessiondata
-```java
-jXpress.enableSession();
-jXpress.disableSession();
-```
-
-
 ## Basic
 ### GET
 ```java
@@ -63,7 +56,7 @@ jXpress.use(String path, new FileReader(Path pathToFile));
 jXpress.webFolder(String path, String folderPath);
 ```
 ### Public Folder
-Will provide all files and sub-folder files on the base bath of "/".
+Will provide all files and sub-folders files on the base path of "/".
 ```java
 jXpress.publicFolder(String folderPath);
 ```
@@ -74,7 +67,7 @@ jXpress.use((request, response) -> void);
 ```
 
 ## Routes using annotations
-Create a class as such, it will automatically get added to the route pool
+Creating a class as such, it will automatically get added to the route pool
 ```java
 //path, method, provides all optional, the ones used below are the default values
 @Route(path = "/", method = Method.GET, provides = "text/plain")
@@ -84,6 +77,88 @@ public class className implements IRequestHandler
 public class className implements IRequestHandler
 ```
 
+## Middleware using annotations
+Creating a class as such, it will automatically get added to the route pool
+```java
+//path, the one used below is the default value
+@Middleware(path = "/")
+public class className extends Worker
+
+@Middleware
+public class className extends Worker
+```
+
+
 ## Request
+### Method
+```java
+request.getMethod();
+```
+
+### Body
+```java
+// Get the body as string
+request.getRawBody();
+// Get the body as byte[]
+request.getByteBody();
+// Get the body as Json using GSON
+request.getJsonBody(Class<?> jsonClass);
+```
+
+### Cookies
+```java
+// Get a cookie
+request.getCookie(String key);
+// Get all cookies
+request.getCookies();
+```
+
+### Headers
+```java
+// Get a header
+request.getHeader(String key);
+// Get all headers
+request.getHeaders();
+```
+
+### Parameters
+Parameters are send in the url eg. website.com/user ***?id=1,2,4&role=admin***
+```java
+// Get a parameter
+request.getParameter(String key);
+// Get all parameters
+request.getParameters();
+```
 
 ## Response
+### Send
+Once a message is sent, the stream automatically closes
+```java
+// Sending data
+response.send(String message)
+/* Or will use toString */
+response.send(Object object)
+```
+### Close
+To stop the stream prematurely use
+```java
+response.close()
+```
+### Response Code
+```java
+// Get the current response code, defaults to 200
+response.getResponseCode();
+// Set response code
+response.setResponseCode(int code);
+```
+
+### Content Type
+```java
+response.setContentType(String type)
+```
+
+### Headers
+```java
+response.addHeader(String header, String value);
+response.addHeader(String header, List<String> values);
+```

@@ -15,20 +15,21 @@ public class Request {
     private byte[] body;
     private HashMap<String, String> cookies;
     private HashMap<String, List<String>> headers;
-    private SessionData sessionData;
+    private HashMap<String, String[]> parameters;
 
     {
         this.headers = new HashMap<>();
     }
 
-    public Request(HttpExchange exchange, SessionData sessionData, HashMap<String, String> cookies) {
+    public Request(HttpExchange exchange, HashMap<String, String> cookies) {
         this.exchange = exchange;
         this.method   = Method.valueOf(exchange.getRequestMethod());
         this.cookies = cookies;
-        this.sessionData = sessionData;
         this.readBody();
         this.readHeaders();
+        this.parameters   = this.getPathParameters();
     }
+
     private void readHeaders() {
         this.exchange.getRequestHeaders().forEach((s, strings) -> this.headers.put(s, strings));
     }
@@ -39,6 +40,31 @@ public class Request {
         } catch (IOException e) {
             // If it fails it's just empty
         }
+    }
+
+    private HashMap<String, String[]> getPathParameters() {
+        String query = exchange.getRequestURI().getQuery();
+        HashMap<String, String[]> parameters = new HashMap<>();
+        if (query == null) return parameters;
+
+        String[] splitParameters = query.split("[&]");
+        for (String param: splitParameters) {
+            String[] keyValue = param.split("=");
+
+            if (keyValue.length < 2) continue;
+
+            String[] values = keyValue[1].split(",");
+            parameters.put(keyValue[0], values);
+        }
+        return parameters;
+    }
+
+    public HashMap<String, String[]> getParameters() {
+        return this.parameters;
+    }
+
+    public String[] getParameter(String key) {
+        return this.parameters.get(key);
     }
 
     public Method getMethod() {
@@ -59,12 +85,14 @@ public class Request {
     public HashMap<String, String> getCookies() {
         return this.cookies;
     }
+    public String getCookie(String key) {
+        return this.cookies.get(key);
+    }
 
     public HashMap<String, List<String>> getHeaders() {
         return this.headers;
     }
-
-    public SessionData getSessionData() {
-        return this.sessionData;
+    public List<String> getHeader(String key) {
+        return this.headers.get(key);
     }
 }

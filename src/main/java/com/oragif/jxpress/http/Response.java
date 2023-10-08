@@ -20,43 +20,22 @@ public class Response {
     private int maxLevel;
     private String path;
     private String[] leveledPath;
-    private HashMap<String, String[]> parameters;
     private int responseCode;
 
-    private Request request;
 
     {
         this.responseCode = 200;
         this.closed = false;
     }
 
-    public Response(HttpExchange exchange, Request request) {
+    public Response(HttpExchange exchange) {
         this.exchange     = exchange;
         this.outputStream = exchange.getResponseBody();
         this.headers      = exchange.getResponseHeaders();
         this.path         = exchange.getRequestURI().getPath();
         this.leveledPath  = splitPath(this.path);
-        this.parameters   = this.getPathParameters();
         if (this.leveledPath.length == 0) this.leveledPath = new String[]{"/"};
         this.maxLevel     = this.leveledPath.length - 1;
-        this.request = request;
-    }
-
-    private HashMap<String, String[]> getPathParameters() {
-        String query = exchange.getRequestURI().getQuery();
-        HashMap<String, String[]> parameters = new HashMap<>();
-        if (query == null) return parameters;
-
-        String[] splitParameters = query.split("[&]");
-        for (String param: splitParameters) {
-            String[] keyValue = param.split("=");
-
-            if (keyValue.length < 2) continue;
-
-            String[] values = keyValue[1].split(",");
-            parameters.put(keyValue[0], values);
-        }
-        return parameters;
     }
 
     private static String[] splitPath(String pathString) {
@@ -71,14 +50,6 @@ public class Response {
 
     public boolean isClosed() {
         return closed;
-    }
-
-    public HashMap<String, String[]> getParameters() {
-        return this.parameters;
-    }
-
-    public String[] getParameter(String key) {
-        return this.parameters.get(key);
     }
 
     public String getPath() {
@@ -122,8 +93,8 @@ public class Response {
         this.headers.add(header, value);
     }
 
-    public void addHeader(String header, List<String> value) {
-        this.headers.put(header, value);
+    public void addHeader(String header, List<String> values) {
+        this.headers.put(header, values);
     }
 
     public void setContentType(String type) {

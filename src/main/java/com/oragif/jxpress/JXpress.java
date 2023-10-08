@@ -1,13 +1,14 @@
 package com.oragif.jxpress;
 
+import com.oragif.jxpress.routing.Routing;
+import com.oragif.jxpress.worker.middleware.Middleware;
 import com.sun.net.httpserver.HttpServer;
 import com.oragif.jxpress.http.IRequestHandler;
 import com.oragif.jxpress.http.RequestManager;
-import com.oragif.jxpress.routing.IRouting;
 import com.oragif.jxpress.routing.Route;
 import com.oragif.jxpress.routing.Router;
 import com.oragif.jxpress.util.Logger;
-import com.oragif.jxpress.worker.IWorker;
+import com.oragif.jxpress.worker.Worker;
 import com.oragif.jxpress.worker.RestWorker;
 import org.atteo.classindex.ClassIndex;
 
@@ -16,11 +17,11 @@ import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.Executor;
 
-public class JXpress implements IRouting {
+public class JXpress extends Routing {
     private final HttpServer httpServer;
     private final Logger logger;
-    private Executor executor;
     private final RequestManager requestManager;
+    private Executor executor;
     private int port;
 
     {
@@ -31,22 +32,34 @@ public class JXpress implements IRouting {
         this.httpServer = HttpServer.create();
         this.requestManager = new RequestManager();
         this.getAnnotatedRoutes();
+        this.getAnnotatedMiddleware();
     }
 
     private void getAnnotatedRoutes() {
         Iterable<Class<?>> classes = ClassIndex.getAnnotated(Route.class);
         classes.forEach(aClass -> {
-            if (Arrays.stream(aClass.getInterfaces()).anyMatch(aClass1 -> aClass1.getName() == IRequestHandler.class.getName())) {
+            if (Arrays.stream(aClass.getInterfaces()).anyMatch(aClass1 -> aClass1.isAssignableFrom(IRequestHandler.class))) {
                 IRequestHandler requestHandler;
                 try {
                     requestHandler = aClass.asSubclass(IRequestHandler.class).newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
-                    return;
-                }
+                } catch (InstantiationException | IllegalAccessException e) { return; }
                 this.requestManager.addEndpoint(
                         this.requestManager.splitPath(aClass.getAnnotation(Route.class).path()),
                         new RestWorker(aClass.getAnnotation(Route.class).method(), requestHandler)
                 );
+            }
+        });
+    }
+
+    private void getAnnotatedMiddleware() {
+        Iterable<Class<?>> classes = ClassIndex.getAnnotated(Middleware.class);
+        classes.forEach(aClass -> {
+            if (aClass.getSuperclass() == Worker.class) {
+                Worker worker;
+                try {
+                    worker = aClass.asSubclass(Worker.class).newInstance();
+                } catch (InstantiationException | IllegalAccessException e) { return; }
+                this.requestManager.use(aClass.getAnnotation(Middleware.class).path(), worker);
             }
         });
     }
@@ -80,14 +93,6 @@ public class JXpress implements IRouting {
         this.requestManager.set404(method);
     }
 
-    public void enableSession() {
-        this.requestManager.enableSession();
-    }
-
-    public void disableSession() {
-        this.requestManager.disableSession();
-    }
-
     @Override
     public void get(String path, IRequestHandler method) {
         this.requestManager.get(path, method);
@@ -114,12 +119,12 @@ public class JXpress implements IRouting {
     }
 
     @Override
-    public void use(String path, IWorker worker) {
+    public void use(String path, Worker worker) {
         this.requestManager.use(path, worker);
     }
 
     @Override
-    public void use(IWorker worker) {
+    public void use(Worker worker) {
         this.requestManager.use(worker);
     }
 

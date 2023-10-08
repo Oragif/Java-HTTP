@@ -1,16 +1,15 @@
 package com.oragif.jxpress.worker.middleware;
 
-import com.oragif.jxpress.worker.IWorker;
-import com.oragif.jxpress.worker.Method;
+import org.atteo.classindex.IndexAnnotated;
 
-public abstract class Middleware implements IWorker {
-    protected Method method;
-    public Middleware() {
-        this.method = Method.MIDDLEWARE;
-    }
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    @Override
-    public Method getMethod() {
-        return this.method;
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@IndexAnnotated
+public @interface Middleware {
+    String path() default "/";
 }
