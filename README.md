@@ -188,6 +188,7 @@ response.addCookie(String key, String value);
 ```
 
 #### Using Cookie Builder
+This ensures the cookie format conforms to the HTTP standard.
 ```java
 response.addCookie(CookieBuilder cookieBuilder);
 ```

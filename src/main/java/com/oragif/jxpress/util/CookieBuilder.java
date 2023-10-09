@@ -1,6 +1,12 @@
 package com.oragif.jxpress.util;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
 
 public class CookieBuilder {
     private String key;
@@ -69,10 +75,18 @@ public class CookieBuilder {
         return " " + key + "=" + value + ";";
     }
 
+    private String httpDateFormater(LocalDateTime localDateTime) {
+        DateTimeFormatter rfc1123 = DateTimeFormatter.ofPattern(
+                "EEE, dd MMM yyyy HH:mm:ss z",
+                        Locale.ENGLISH
+                )
+                .withZone(ZoneId.of("GMT"));
+        return localDateTime.format(rfc1123);
+    }
+
     public String build() {
         String cookieString = this.key + "=" + this.value + ";";
-
-        if(this.expires != null)  cookieString += this.addOption("Expires"  , this.expires.toString());
+        if(this.expires != null)  cookieString += this.addOption("Expires"  , this.httpDateFormater(this.expires));
         if(this.maxAge != null)   cookieString += this.addOption("Max-Age"  , this.maxAge.toString());
         if(this.domain != null)   cookieString += this.addOption("Domain"   , this.domain);
         if(this.path != null)     cookieString += this.addOption("Path"     , this.path);
