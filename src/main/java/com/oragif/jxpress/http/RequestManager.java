@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.oragif.jxpress.routing.Router;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class RequestManager extends Router implements HttpHandler {
 
@@ -37,7 +38,9 @@ public class RequestManager extends Router implements HttpHandler {
     }
 
     private HashMap<String, String> readCookies(HttpExchange exchange) {
-        String[] headerCookies = exchange.getRequestHeaders().get("Cookie").get(0).split(";");
+        List<String> cookieHeader = exchange.getRequestHeaders().get("Cookie");
+        if (cookieHeader == null) return new HashMap<>();
+        String[] headerCookies = cookieHeader.get(0).split(";");
         if (headerCookies.length == 0) return null;
 
         HashMap<String, String> cookies = new HashMap<>();
