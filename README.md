@@ -70,6 +70,30 @@ jXpress.publicFolder(String folderPath);
 ```java
 jXpress.use((request, response) -> void);
 ```
+### Middleware using annotations
+Creating a class as such, it will automatically get added to the worker pool
+```java
+//path, the one used below is the default value
+@Middleware(path = "/")
+public class className extends Worker
+
+@Middleware
+public class className extends Worker
+```
+### Listen to events
+#### On Request Closing
+The "onClose" function will be called just before the connection is closed.
+```java
+// Implement the interface
+public class <MiddlewareName> extends Worker implements IRequestOnClose
+
+// Start listening
+@Override
+public void handle(Request request, Response response) {
+        response.listenOnClose(this::onClose);
+}
+
+```
 
 ## Routes using annotations
 Creating a class as such, it will automatically get added to the route pool
@@ -81,18 +105,6 @@ public class className implements IRequestHandler
 @Route
 public class className implements IRequestHandler
 ```
-
-## Middleware using annotations
-Creating a class as such, it will automatically get added to the worker pool
-```java
-//path, the one used below is the default value
-@Middleware(path = "/")
-public class className extends Worker
-
-@Middleware
-public class className extends Worker
-```
-
 
 ## Request
 ### Method

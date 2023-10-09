@@ -1,6 +1,8 @@
 package com.oragif.jxpress.http;
 
 import com.google.gson.Gson;
+import com.oragif.jxpress.event.IRequestOnClose;
+import com.oragif.jxpress.event.RequestEventHandler;
 import com.sun.net.httpserver.HttpExchange;
 import com.oragif.jxpress.worker.Method;
 

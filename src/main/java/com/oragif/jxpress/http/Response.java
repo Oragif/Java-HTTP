@@ -1,5 +1,7 @@
 package com.oragif.jxpress.http;
 
+import com.oragif.jxpress.event.IRequestOnClose;
+import com.oragif.jxpress.event.RequestEventHandler;
 import com.oragif.jxpress.util.CookieBuilder;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -28,13 +30,17 @@ public class Response {
     private String path;
     private String[] leveledPath;
     private int responseCode;
+    private RequestEventHandler requestEventHandler;
+    private Request request;
+
 
     {
         this.responseCode = 200;
         this.closed = false;
+        this.requestEventHandler = new RequestEventHandler();
     }
 
-    public Response(HttpExchange exchange) {
+    public Response(HttpExchange exchange, Request request) {
         this.exchange     = exchange;
         this.outputStream = exchange.getResponseBody();
         this.headers      = exchange.getResponseHeaders();
@@ -42,6 +48,7 @@ public class Response {
         this.leveledPath  = splitPath(this.path);
         if (this.leveledPath.length == 0) this.leveledPath = new String[]{"/"};
         this.maxLevel     = this.leveledPath.length - 1;
+        this.request = request;
     }
 
     private static String[] splitPath(String pathString) {
@@ -50,6 +57,7 @@ public class Response {
     }
 
     public void close() {
+        this.requestEventHandler.triggerOnCloseListeners(this.request, this);
         this.exchange.close();
         this.closed = true;
     }
@@ -141,5 +149,9 @@ public class Response {
 
     public void send(Object object) {
         this.send(object.toString());
+    }
+
+    public void listenOnClose(IRequestOnClose requestOnClose) {
+        this.requestEventHandler.listenOnClose(requestOnClose);
     }
 }

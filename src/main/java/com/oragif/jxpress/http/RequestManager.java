@@ -23,7 +23,7 @@ public class RequestManager extends Router implements HttpHandler {
         HashMap<String, String> cookies = readCookies(exchange);
 
         Request  request  = new Request(exchange, cookies);
-        Response response = new Response(exchange);
+        Response response = new Response(exchange, request);
 
         this.handle(request, response);
         this.endExchange(request, response);
