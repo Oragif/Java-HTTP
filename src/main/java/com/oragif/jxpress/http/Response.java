@@ -1,5 +1,6 @@
 package com.oragif.jxpress.http;
 
+import com.oragif.jxpress.util.CookieBuilder;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -13,6 +14,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -100,6 +102,25 @@ public class Response {
     public void addHeader(String header, List<String> values) {
         this.headers.put(header, values);
     }
+
+    private void addCookie(String cookieString) {
+        if (!this.headers.containsKey("Set-Cookie")) {
+            this.headers.add("Set-Cookie", cookieString);
+        } else {
+            List<String> cookies = this.headers.get("Set-Cookie");
+            cookies.add(cookieString);
+        }
+    }
+
+    public void addCookie(String key, String value) {
+        String cookieString = key + "=" + value;
+        this.addCookie(cookieString);
+    }
+
+    public void addCookie(CookieBuilder cookieBuilder) {
+        this.addCookie(cookieBuilder.build());
+    }
+
 
     public void setContentType(String type) {
         this.addHeader("Content-Type", type);

@@ -4,12 +4,10 @@ import com.oragif.jxpress.http.Request;
 import com.oragif.jxpress.http.Response;
 import com.oragif.jxpress.worker.Worker;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Base64;
+
+import static com.oragif.jxpress.util.Encryption.sha256;
 
 public class Session extends Worker {
     private static HashMap<String, Session> sessions;
@@ -22,14 +20,6 @@ public class Session extends Worker {
 
     {
         this.sessionData = new HashMap<>();
-    }
-
-    private static String sha256(String text) {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            return Base64.getEncoder().encodeToString(messageDigest.digest(text.getBytes(StandardCharsets.UTF_8)));
-        } catch (NoSuchAlgorithmException ignored) {}
-        return null;
     }
 
     private static String createSession(Request request) {
@@ -55,7 +45,7 @@ public class Session extends Worker {
         Session session = getOrCreateSession(request);
         request.setMiddlewareData("session", session);
         request.setMiddlewareData("sessionKey", this.sessionKey);
-        response.addHeader("Set-Cookie", "session=" + this.sessionKey);
+        response.addCookie("session", this.sessionKey);
     }
 
     public void setSessionData(String key, Object data) {

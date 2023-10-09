@@ -12,6 +12,7 @@ public class Main {
         jXpress.use(new Session());
         jXpress.get("/test", (request, response) -> {
             Session session = (Session) request.getMiddlewareData("session");
+            response.addCookie("test", "multiple cookies");
             response.send("Test: " + session.getSessionData("test"));
         });
         jXpress.get("/test1", (request, response) -> {response.send("Test 1");});

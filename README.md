@@ -182,6 +182,32 @@ response.addHeader(String header, String value);
 response.addHeader(String header, List<String> values);
 ```
 
+### Cookies
+```java
+response.addCookie(String key, String value);
+```
+
+#### Using Cookie Builder
+```java
+response.addCookie(CookieBuilder cookieBuilder);
+```
+Options:
+```java
+cookieBuilder.httpOnly();
+cookieBuilder.secure();
+cookieBuilder.partitioned();
+cookieBuilder.expires(LocalDateTime dateTime);
+cookieBuilder.maxAge(int maxAge);
+cookieBuilder.domain(String domain);
+cookieBuilder.path(String path);
+cookieBuilder.sameSite(SameSite sameSite);
+```
+
+Example:
+```java
+response.addCookie(new CookieBuilder("cookieBuilder", "test").maxAge(100).sameSite(CookieBuilder.SameSite.LAX));
+```
+
 ## Predefined Middleware
 ### Session
 Will automatically add or retrieve a session and store it in the middleware data.\
@@ -203,4 +229,10 @@ session.getSessionData(String key);
 ```java
 // Getting the session key
 String sessionKey = (String) request.getMiddlewareData("sessionKey");
+```
+
+### File Reader
+Exposes a file on a path:
+```java
+jXpress.use(String path, new FileReader(Path pathToFile));
 ```
