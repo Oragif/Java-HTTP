@@ -48,5 +48,6 @@ public class Session extends Worker {
         Session session = getOrCreateSession(sessionKey, request);
         request.setMiddlewareData("session", session);
         request.setMiddlewareData("sessionKey", sessionKey);
+        response.addHeader("Set-Cookie", "session=" + sessionKey);
     }
 }

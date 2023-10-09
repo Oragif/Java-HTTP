@@ -1,6 +1,7 @@
 package com.oragif.test;
 
 import com.oragif.jxpress.JXpress;
+import com.oragif.jxpress.middleware.Session;
 import com.oragif.jxpress.routing.Router;
 
 import java.io.IOException;
@@ -8,8 +9,9 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         JXpress jXpress = new JXpress();
+        jXpress.use(new Session());
         jXpress.get("/test", (request, response) -> {
-            String test = (String) request.getMiddlewareData("test");
+            String test = (String) request.getMiddlewareData("session");
             response.send("Test: " + test);
         });
         jXpress.get("/test1", (request, response) -> {response.send("Test 1");});
