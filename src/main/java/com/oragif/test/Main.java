@@ -9,9 +9,10 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         JXpress jXpress = new JXpress();
+        jXpress.use(new Session());
         jXpress.get("/test", (request, response) -> {
-            String test = "test";
-            response.send("Test: " + test);
+            Session session = (Session) request.getMiddlewareData("session");
+            response.send("Test: " + session.getSessionData("test"));
         });
         jXpress.get("/test1", (request, response) -> {response.send("Test 1");});
         jXpress.get("/test2", (request, response) -> {response.send("Test 2");});

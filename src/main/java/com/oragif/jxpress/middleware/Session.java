@@ -13,9 +13,15 @@ import java.util.Base64;
 
 public class Session extends Worker {
     private static HashMap<String, Session> sessions;
+    private HashMap<String, Object> sessionData;
+    private String sessionKey;
 
     static {
         sessions = new HashMap<>();
+    }
+
+    {
+        this.sessionData = new HashMap<>();
     }
 
     private static String sha256(String text) {
@@ -37,17 +43,30 @@ public class Session extends Worker {
         return key;
     }
 
-    private static Session getOrCreateSession(String key, Request request) {
+    private Session getOrCreateSession(Request request) {
+        String key = request.getCookie("session");
         if (key == null || !sessions.containsKey(key)) key = createSession(request);
+        this.sessionKey = key;
         return sessions.get(key);
     }
 
     @Override
     public void handle(Request request, Response response) {
-        String sessionKey = request.getCookie("session");
-        Session session = getOrCreateSession(sessionKey, request);
+        Session session = getOrCreateSession(request);
         request.setMiddlewareData("session", session);
-        request.setMiddlewareData("sessionKey", sessionKey);
-        response.addHeader("Set-Cookie", "session=" + sessionKey);
+        request.setMiddlewareData("sessionKey", this.sessionKey);
+        response.addHeader("Set-Cookie", "session=" + this.sessionKey);
+    }
+
+    public void setSessionData(String key, Object data) {
+        this.sessionData.put(key, data);
+    }
+
+    public Object getSessionData(String key) {
+        return this.sessionData.get(key);
+    }
+
+    public HashMap<String, Object> getAllSessionData() {
+        return this.sessionData;
     }
 }

@@ -1,6 +1,11 @@
 # Java-HTTP
 Building an HTTP routing system with inspiration from Express.js.
 
+# Load order
+Middleware and routes will be loaded in the order they are specified, and all dynamics using annotations will be loaded last. 
+Meaning if a middleware is important at the start, add it in code at the beginning before the use of listen.\
+It is therefore also important to add predefined middlewares like Session, at the start to ensure it gets ran before other middleware.
+
 # Functionality
 ## Creating New HTTP Server & Router
 ```java
@@ -78,7 +83,7 @@ public class className implements IRequestHandler
 ```
 
 ## Middleware using annotations
-Creating a class as such, it will automatically get added to the route pool
+Creating a class as such, it will automatically get added to the worker pool
 ```java
 //path, the one used below is the default value
 @Middleware(path = "/")
@@ -175,4 +180,27 @@ response.setContentType(String type)
 ```java
 response.addHeader(String header, String value);
 response.addHeader(String header, List<String> values);
+```
+
+## Predefined Middleware
+### Session
+Will automatically add or retrieve a session and store it in the middleware data.\
+The session id is automatically sent to the client to store as a cookie.\
+Session cookie should remove itself once browser is closed, be aware this depends on the browser implementation.
+#### Adding it
+```java
+jXpress.use(new Session());
+```
+#### Accessing it
+```java
+// Getting the session
+Session session = (Session) request.getMiddlewareData("session");
+// Setting data in the session
+session.setSessionData(String key, Object data);
+// Retrieving data from the session
+session.getSessionData(String key);
+```
+```java
+// Getting the session key
+String sessionKey = (String) request.getMiddlewareData("sessionKey");
 ```

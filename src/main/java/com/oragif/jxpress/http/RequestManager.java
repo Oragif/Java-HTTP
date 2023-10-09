@@ -26,10 +26,10 @@ public class RequestManager extends Router implements HttpHandler {
         Response response = new Response(exchange);
 
         this.handle(request, response);
-        this.endExchange(exchange, request, response);
+        this.endExchange(request, response);
     }
 
-    private void endExchange(HttpExchange exchange, Request request, Response response) {
+    private void endExchange(Request request, Response response) {
          if (!response.isClosed()) {
             response.setResponseCode(404);
             this.notFoundEndpoint.handle(request, response);

@@ -31,8 +31,6 @@ public class JXpress extends Routing {
     public JXpress() throws IOException {
         this.httpServer = HttpServer.create();
         this.requestManager = new RequestManager();
-        this.getAnnotatedRoutes();
-        this.getAnnotatedMiddleware();
     }
 
     private void getAnnotatedRoutes() {
@@ -74,6 +72,10 @@ public class JXpress extends Routing {
 
     public void listen(int port) {
         try {
+            // Load dynamic routes
+            this.getAnnotatedRoutes();
+            this.getAnnotatedMiddleware();
+
             this.httpServer.bind(new InetSocketAddress(port), 0);
             this.httpServer.createContext("/", this.requestManager);
             this.httpServer.setExecutor(this.executor);
@@ -85,6 +87,9 @@ public class JXpress extends Routing {
         }
     }
 
+    /**
+     * Will give any connections 10 seconds before forcefully shutting down
+     */
     public void stop() {
         this.httpServer.stop(10);
     }
