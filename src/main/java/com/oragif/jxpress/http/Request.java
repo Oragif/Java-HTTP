@@ -7,10 +7,10 @@ import com.sun.net.httpserver.HttpExchange;
 import com.oragif.jxpress.worker.Method;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.StreamSupport;
 
 public class Request {
     private final HttpExchange exchange;
@@ -21,6 +21,10 @@ public class Request {
     private HashMap<String, String[]> parameters;
     private HashMap<String, Object> middlewareData;
     private String ip;
+    private int level;
+    private int maxLevel;
+    private String path;
+    private String[] leveledPath;
 
     {
         this.headers = new HashMap<>();
@@ -30,11 +34,49 @@ public class Request {
     public Request(HttpExchange exchange, HashMap<String, String> cookies) {
         this.exchange = exchange;
         this.method   = Method.valueOf(exchange.getRequestMethod());
-        this.cookies = cookies;
+        this.cookies  = cookies;
         this.readBody();
         this.readHeaders();
         this.parameters   = this.getPathParameters();
-        this.ip = exchange.getRemoteAddress().getHostName();
+        this.ip           = exchange.getRemoteAddress().getHostName();
+        this.path         = exchange.getRequestURI().getPath();
+        this.leveledPath  = splitPath(this.path);
+        if (this.leveledPath.length == 0) this.leveledPath = new String[]{"/"};
+        this.maxLevel     = this.leveledPath.length - 1;
+    }
+
+    private static String[] splitPath(String pathString) {
+        Path path = Paths.get(pathString);
+        return StreamSupport.stream(path.spliterator(), false).map(path1 -> "/".concat(path1.toString())).toArray(String[]::new);
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    public String getLeveledPathFromRoot(int level) {
+        return String.join("", Arrays.copyOfRange(this.leveledPath, 0, level));
+    }
+
+    public String getLeveledPath(int fromLevel, int toLevel) {
+        return String.join("", Arrays.copyOfRange(this.leveledPath, fromLevel, toLevel));
+    }
+
+    public String getCurrentLeveledPath() {
+        return this.leveledPath[this.level];
+    }
+
+    public int getLevel() {
+        return this.level;
+    }
+
+    public int getMaxLevel() {
+        return this.maxLevel;
+    }
+
+    public int nextLevel() {
+        this.level += 1;
+        return this.getLevel();
     }
 
     private void readHeaders() {

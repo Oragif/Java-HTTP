@@ -15,6 +15,7 @@ public class Session extends Worker implements IRequestOnClose {
     private HashMap<String, Object> sessionData;
     private String sessionKey;
     private LocalDateTime lastRequestTime;
+    private String lastPath;
 
     static {
         sessions = new HashMap<>();
@@ -32,6 +33,7 @@ public class Session extends Worker implements IRequestOnClose {
         } while (sessions.containsKey(key));
 
         session.lastRequestTime = LocalDateTime.now();
+        session.lastPath = request.getPath();
         session.sessionKey = key;
         sessions.put(key, session);
 
@@ -69,13 +71,18 @@ public class Session extends Worker implements IRequestOnClose {
         return this.lastRequestTime;
     }
 
+    public String getLastPath() {
+        return this.lastPath;
+    }
+
     public String getSessionKey() {
-        return  this.sessionKey;
+        return this.sessionKey;
     }
 
     @Override
     public void onClose(Request request, Response response) {
         this.lastRequestTime = LocalDateTime.now();
+        this.lastPath        = request.getPath();
         sessions.put(this.sessionKey, this);
     }
 }

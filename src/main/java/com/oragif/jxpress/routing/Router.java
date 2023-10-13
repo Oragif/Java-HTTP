@@ -41,7 +41,7 @@ public class Router extends Routing {
 
     public void handle(Request request, Response response) {
         if (response.isClosed()) return;
-        if (this.root != "") response.nextLevel();
+        if (this.root != "") request.nextLevel();
         this.triggerWorkers(request, response);
 
         if (triggerEndpoint(request, response)) return;
@@ -50,18 +50,18 @@ public class Router extends Routing {
     }
 
     private void triggerNextLayer(Request request, Response response) {
-        Router layer = this.layers.get(response.getCurrentLeveledPath());
+        Router layer = this.layers.get(request.getCurrentLeveledPath());
         if (layer != null) {
             layer.handle(request, response);
         }
     }
 
     private boolean triggerEndpoint(Request request, Response response) {
-        if (response.getLevel() < response.getMaxLevel()) return false;
+        if (request.getLevel() < request.getMaxLevel()) return false;
 
         String path = "/";
-        if (response.getLevel() == response.getMaxLevel()) {
-            path = response.getCurrentLeveledPath();
+        if (request.getLevel() == request.getMaxLevel()) {
+            path = request.getCurrentLeveledPath();
         }
 
         Worker endpoint = this.endpoints.get(new ImmutablePair<>(path, request.getMethod()));

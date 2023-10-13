@@ -25,10 +25,6 @@ public class Response {
     private final OutputStream outputStream;
     private final Headers headers;
     private boolean closed;
-    private int level;
-    private int maxLevel;
-    private String path;
-    private String[] leveledPath;
     private int responseCode;
     private RequestEventHandler requestEventHandler;
     private Request request;
@@ -44,16 +40,7 @@ public class Response {
         this.exchange     = exchange;
         this.outputStream = exchange.getResponseBody();
         this.headers      = exchange.getResponseHeaders();
-        this.path         = exchange.getRequestURI().getPath();
-        this.leveledPath  = splitPath(this.path);
-        if (this.leveledPath.length == 0) this.leveledPath = new String[]{"/"};
-        this.maxLevel     = this.leveledPath.length - 1;
         this.request = request;
-    }
-
-    private static String[] splitPath(String pathString) {
-        Path path = Paths.get(pathString);
-        return StreamSupport.stream(path.spliterator(), false).map(path1 -> "/".concat(path1.toString())).toArray(String[]::new);
     }
 
     public void close() {
@@ -66,34 +53,7 @@ public class Response {
         return closed;
     }
 
-    public String getPath() {
-        return this.path;
-    }
 
-    public String getLeveledPathFromRoot(int level) {
-        return String.join("", Arrays.copyOfRange(this.leveledPath, 0, level));
-    }
-
-    public String getLeveledPath(int fromLevel, int toLevel) {
-        return String.join("", Arrays.copyOfRange(this.leveledPath, fromLevel, toLevel));
-    }
-
-    public String getCurrentLeveledPath() {
-        return this.leveledPath[this.level];
-    }
-
-    public int getLevel() {
-        return this.level;
-    }
-
-    public int getMaxLevel() {
-        return this.maxLevel;
-    }
-
-    public int nextLevel() {
-        this.level += 1;
-        return this.getLevel();
-    }
 
     public void setResponseCode(int code) {
         this.responseCode = code;
